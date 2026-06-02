@@ -1,0 +1,16 @@
+# dependencies
+node_modules/
+
+# environment files
+.env
+
+# logs
+*.log
+
+# React Native
+.expo/
+android/build/
+ios/build/
+
+# system
+.DS_Store
