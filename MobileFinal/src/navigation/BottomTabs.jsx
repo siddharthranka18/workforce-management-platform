@@ -94,7 +94,7 @@ component={TrackingScreen}
 
 
 <Tab.Screen
-name="Complaints"
+name="Field Visits"
 component={ComplaintListScreen}
 />
 
