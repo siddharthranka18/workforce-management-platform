@@ -10,13 +10,33 @@ const db=require("./config/db");
 
 const app=express();
 
-
 app.use(cors());
 
+const employeeRoutes=require("./routes/employeeRoutes");
+const visitRoutes=require("./routes/visitRoutes");
+const leaveRoutes=require("./routes/leaveRoutes");
+const locationRoutes=require("./routes/locationRoutes");
 app.use(express.json());
+app.use(
 
+"/api/employees",
 
+employeeRoutes
 
+);
+app.use(
+"/api/visits",
+visitRoutes
+);
+
+app.use(
+"/api/leaves",
+leaveRoutes
+);
+app.use(
+"/api/locations",
+locationRoutes
+);
 app.get("/",(req,res)=>{
 
 
