@@ -60,6 +60,7 @@ const applyLeave=async(req,res)=>{
 
 
 try{
+    console.log("LEAVE BODY:",req.body);
 
 
 const {

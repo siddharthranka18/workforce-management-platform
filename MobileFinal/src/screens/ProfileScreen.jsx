@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 
 import {
 View,
@@ -11,9 +11,67 @@ ScrollView
 
 import {Ionicons} from '@expo/vector-icons';
 
+import AsyncStorage from
+'@react-native-async-storage/async-storage';
 
 
-const ProfileScreen=()=>{
+
+
+const ProfileScreen=({navigation})=>{
+
+
+const [employee,setEmployee]=useState(null);
+
+
+
+
+useEffect(()=>{
+
+
+loadEmployee();
+
+
+},[]);
+
+
+
+
+
+const loadEmployee=async()=>{
+
+
+const data=await AsyncStorage.getItem("employee");
+
+
+if(data){
+
+
+setEmployee(JSON.parse(data));
+
+
+}
+
+
+};
+
+
+
+
+
+const logout=async()=>{
+
+
+await AsyncStorage.removeItem("employee");
+
+
+navigation.replace("Login");
+
+
+};
+
+
+
+
 
 
 return(
@@ -36,16 +94,22 @@ color="#2563EB"
 
 
 <Text style={styles.name}>
-Siddharth Ranka
+
+{employee?.name}
+
 </Text>
 
 
 <Text style={styles.role}>
+
 Field Worker
+
 </Text>
 
 
 </View>
+
+
 
 
 
@@ -61,9 +125,11 @@ icon="id-card"
 
 label="Employee ID"
 
-value="EMP001"
+value={`EMP00${employee?.id}`}
 
 />
+
+
 
 
 
@@ -73,9 +139,11 @@ icon="mail"
 
 label="Email"
 
-value="siddharth@gmail.com"
+value={employee?.email}
 
 />
+
+
 
 
 
@@ -86,9 +154,11 @@ icon="call"
 
 label="Phone"
 
-value="+91 9876543210"
+value={employee?.phone}
 
 />
+
+
 
 
 
@@ -98,9 +168,11 @@ icon="business"
 
 label="Department"
 
-value="Service Team"
+value={employee?.department}
 
 />
+
+
 
 
 
@@ -111,7 +183,16 @@ value="Service Team"
 
 
 
-<TouchableOpacity style={styles.logout}>
+
+
+
+<TouchableOpacity
+
+style={styles.logout}
+
+onPress={logout}
+
+>
 
 
 <Ionicons
@@ -126,11 +207,14 @@ color="white"
 
 
 <Text style={styles.logoutText}>
+
 Logout
+
 </Text>
 
 
 </TouchableOpacity>
+
 
 
 
@@ -142,6 +226,11 @@ Logout
 
 
 }
+
+
+
+
+
 
 
 
@@ -165,6 +254,7 @@ color="#2563EB"
 />
 
 
+
 <View>
 
 
@@ -182,11 +272,11 @@ color="#2563EB"
 </Text>
 
 
-
 </View>
 
 
 </View>
+
 
 )
 
@@ -196,7 +286,12 @@ color="#2563EB"
 
 
 
+
+
 export default ProfileScreen;
+
+
+
 
 
 
