@@ -1,5 +1,6 @@
-import React from 'react';
-
+import React,{useEffect,useState} from 'react';
+import AsyncStorage from 
+'@react-native-async-storage/async-storage';
 import {
   View,
   Text,
@@ -12,7 +13,35 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 const DashboardScreen = ({navigation}) => {
+const [employee,setEmployee]=useState(null);
 
+
+
+useEffect(()=>{
+
+
+const loadEmployee=async()=>{
+
+
+const data=await AsyncStorage.getItem("employee");
+
+
+if(data){
+
+
+setEmployee(JSON.parse(data));
+
+
+}
+
+
+};
+
+
+loadEmployee();
+
+
+},[]);
 
 return (
 
@@ -30,9 +59,10 @@ Hello,
 </Text>
 
 <Text style={styles.name}>
-Employee 👋
-</Text>
 
+{employee?.name || "Employee"} 👋
+
+</Text>
 </View>
 
 

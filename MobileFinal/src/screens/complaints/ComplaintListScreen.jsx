@@ -1,68 +1,185 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 
 import {
 View,
 Text,
 StyleSheet,
 ScrollView,
-TouchableOpacity
+TouchableOpacity,
+Alert
 } from 'react-native';
 
+
 import {Ionicons} from '@expo/vector-icons';
+
+import AsyncStorage from 
+'@react-native-async-storage/async-storage';
+
+import api from '../../api/api';
 
 
 
 const ComplaintListScreen=()=>{
 
 
-const [complaints,setComplaints]=useState([
+const [complaints,setComplaints]=useState([]);
 
-{
-id:1,
-customer:'ABC Industries',
-issue:'Machine Service Request',
-address:'Industrial Area Phase 2',
-status:'Assigned'
-},
 
-{
-id:2,
-customer:'XYZ Office',
-issue:'Network Issue',
-address:'Main Road Branch',
-status:'On The Way'
+
+
+
+useEffect(()=>{
+
+
+loadVisits();
+
+
+},[]);
+
+
+
+
+
+const loadVisits=async()=>{
+
+
+try{
+
+
+const data=await AsyncStorage.getItem("employee");
+
+
+const employee=JSON.parse(data);
+
+
+
+const response=await api.get(
+
+`/visits/${employee.id}`
+
+);
+
+
+
+setComplaints(response.data);
+
+
+
 }
 
-]);
+
+catch(error){
 
 
+console.log(error.message);
 
-const updateStatus=(id,status)=>{
-
-
-const updated=complaints.map(item=>{
-
-
-if(item.id===id){
-
-return {
-...item,
-status:status
-}
 
 }
 
-
-return item;
-
-
-});
-
-
-setComplaints(updated);
 
 
 };
+
+
+
+
+
+
+
+const dispatchVisit=async(id)=>{
+
+
+try{
+
+
+await api.put(
+
+`/visits/dispatch/${id}`,
+
+{
+latitude:26.4499,
+longitude:74.6399
+}
+
+);
+
+
+
+loadVisits();
+
+
+
+}
+
+
+catch(error){
+
+
+Alert.alert(
+"Error",
+"Dispatch failed"
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+
+
+
+const reachedVisit=async(id)=>{
+
+
+try{
+
+
+await api.put(
+
+`/visits/reached/${id}`,
+
+{
+latitude:26.4520,
+longitude:74.6410
+}
+
+);
+
+
+
+loadVisits();
+
+
+
+}
+
+
+catch(error){
+
+
+Alert.alert(
+"Error",
+"Update failed"
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
 
 
 
@@ -77,44 +194,63 @@ Field Visits
 </Text>
 
 
+
 {
 
 complaints.map(item=>(
 
 
-<View 
+<View
+
 style={styles.card}
+
 key={item.id}
+
 >
+
 
 
 <View style={styles.row}>
 
 
 <Ionicons
+
 name="briefcase"
+
 size={28}
+
 color="#2563EB"
+
 />
+
 
 
 <View style={{flex:1}}>
 
 
 <Text style={styles.customer}>
-{item.customer}
+
+{item.customer_name}
+
 </Text>
+
 
 
 <Text style={styles.issue}>
+
 {item.issue}
+
 </Text>
 
 
+
 </View>
 
 
+
 </View>
+
+
 
 
 
@@ -123,13 +259,19 @@ color="#2563EB"
 
 
 <Text>
+
 📍 {item.address}
+
 </Text>
+
 
 
 <Text style={styles.status}>
+
 Status : {item.status}
+
 </Text>
+
 
 
 </View>
@@ -138,25 +280,26 @@ Status : {item.status}
 
 
 
+
 {
 
-item.status==='Assigned' &&
+
+item.status==="ASSIGNED" &&
 
 
 <TouchableOpacity
 
 style={styles.button}
 
-onPress={()=>updateStatus(
-item.id,
-'On The Way'
-)}
+onPress={()=>dispatchVisit(item.id)}
 
 >
 
 
 <Text style={styles.btnText}>
+
 Dispatch
+
 </Text>
 
 
@@ -169,27 +312,30 @@ Dispatch
 
 
 
+
+
+
 {
 
 
-item.status==='On The Way' &&
+item.status==="ON_THE_WAY" &&
 
 
 <TouchableOpacity
 
 style={styles.button}
 
-onPress={()=>updateStatus(
-item.id,
-'Reached Site'
-)}
+onPress={()=>reachedVisit(item.id)}
 
 >
 
 
 <Text style={styles.btnText}>
+
 Reached Site
+
 </Text>
+
 
 
 </TouchableOpacity>
@@ -200,24 +346,33 @@ Reached Site
 
 
 
+
+
+
 {
 
 
-item.status==='Reached Site' &&
+item.status==="REACHED" &&
 
 
 <View style={styles.completed}>
 
 
 <Ionicons
+
 name="checkmark-circle"
+
 size={22}
+
 color="green"
+
 />
 
 
 <Text>
+
 Location Verified
+
 </Text>
 
 
@@ -225,6 +380,7 @@ Location Verified
 
 
 }
+
 
 
 
@@ -242,10 +398,15 @@ Location Verified
 
 )
 
+
 }
 
 
+
 export default ComplaintListScreen;
+
+
+
 
 
 
@@ -267,6 +428,7 @@ marginBottom:20
 },
 
 
+
 card:{
 backgroundColor:'white',
 padding:18,
@@ -276,11 +438,13 @@ elevation:3
 },
 
 
+
 row:{
 flexDirection:'row',
 alignItems:'center',
 gap:12
 },
+
 
 
 customer:{
@@ -289,9 +453,11 @@ fontWeight:'700'
 },
 
 
+
 issue:{
 color:'gray'
 },
+
 
 
 infoBox:{
@@ -300,9 +466,11 @@ gap:8
 },
 
 
+
 status:{
 fontWeight:'700'
 },
+
 
 
 button:{
@@ -314,10 +482,12 @@ marginTop:18
 },
 
 
+
 btnText:{
 color:'white',
 fontWeight:'700'
 },
+
 
 
 completed:{

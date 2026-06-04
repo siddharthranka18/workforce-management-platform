@@ -1,17 +1,23 @@
-import React, {useState} from 'react';
-
+import React,{useState} from 'react';
+import AsyncStorage from 
+'@react-native-async-storage/async-storage';
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
+View,
+Text,
+TextInput,
+StyleSheet,
+TouchableOpacity,
+Alert
 } from 'react-native';
+
 
 import Button from '../components/Button';
 
+import api from '../api/api';
 
-const LoginScreen = ({navigation}) => {
+
+
+const LoginScreen=({navigation})=>{
 
 
 const [email,setEmail]=useState('');
@@ -19,16 +25,95 @@ const [email,setEmail]=useState('');
 const [role,setRole]=useState('employee');
 
 
-const handleLogin=()=>{
 
- if(role==="employee"){
-   navigation.replace("Main");
- }
- else{
-    navigation.replace("ManagerDashboard");
- }
+
+
+const handleLogin=async()=>{
+
+
+
+
+console.log("LOGIN BUTTON CLICKED");
+
+console.log("ROLE:",role);
+if(role==="employee"){
+
+
+try{
+
+
+console.log("APP EMAIL:",email);
+
+
+const response=await api.post(
+
+"/employees/login",
+
+{
+email:email.trim()
+}
+
+);
+
+
+console.log("LOGIN RESPONSE:",response.data);
+
+
+const employee=response.data.employee;
+
+
+await AsyncStorage.setItem(
+
+"employee",
+
+JSON.stringify(employee)
+
+);
+
+
+navigation.replace("Main");
+
 
 }
+
+catch(error){
+
+
+console.log(
+"LOGIN ERROR:",
+error.response?.data || error.message
+);
+
+
+Alert.alert(
+
+"Login Failed",
+
+error.response?.data?.message || error.message
+
+);
+
+
+}
+
+}
+
+
+else{
+
+
+navigation.replace("ManagerDashboard");
+
+
+}
+
+
+
+};
+
+
+
+
 
 
 return(
@@ -47,6 +132,8 @@ Field Employee Portal
 
 
 
+
+
 <TextInput
 
 placeholder="Enter Email ID"
@@ -55,16 +142,26 @@ value={email}
 
 onChangeText={setEmail}
 
+autoCapitalize="none"
+
 style={styles.input}
 
 />
 
 
 
-<Button 
+
+
+
+<Button
+
 title="Login"
+
 onPress={handleLogin}
+
 />
+
+
 
 
 
@@ -73,7 +170,12 @@ Demo Login
 </Text>
 
 
+
+
+
 <View style={styles.roleBox}>
+
+
 
 
 <TouchableOpacity
@@ -91,8 +193,10 @@ role==="employee" && styles.active
 Employee
 </Text>
 
-
 </TouchableOpacity>
+
+
+
 
 
 
@@ -115,18 +219,26 @@ Manager
 </TouchableOpacity>
 
 
+
+
 </View>
 
 
 
 </View>
+
 
 )
+
 
 }
 
 
+
+
 export default LoginScreen;
+
+
 
 
 
@@ -141,6 +253,7 @@ backgroundColor:'#F5F7FB'
 },
 
 
+
 title:{
 fontSize:28,
 fontWeight:'700',
@@ -149,12 +262,14 @@ textAlign:'center'
 },
 
 
+
 subtitle:{
 textAlign:'center',
 color:'#6B7280',
 marginBottom:40,
 marginTop:5
 },
+
 
 
 input:{
@@ -166,6 +281,7 @@ fontSize:16
 },
 
 
+
 demo:{
 textAlign:'center',
 marginTop:20,
@@ -173,11 +289,13 @@ color:'#6B7280'
 },
 
 
+
 roleBox:{
 flexDirection:'row',
 marginTop:10,
 justifyContent:'center'
 },
+
 
 
 role:{
@@ -188,6 +306,7 @@ borderRadius:10,
 width:110,
 alignItems:'center'
 },
+
 
 
 active:{

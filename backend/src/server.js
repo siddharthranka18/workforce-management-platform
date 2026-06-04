@@ -61,10 +61,9 @@ try{
 
 const [rows]=await db.query(
 
-"SELECT * FROM field_visits"
+"SELECT * FROM employees"
 
 );
-
 
 res.json(rows);
 
