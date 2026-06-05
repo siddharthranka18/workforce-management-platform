@@ -1,42 +1,100 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
+
 
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView
+View,
+Text,
+StyleSheet,
+ScrollView
 } from 'react-native';
+
 
 import { Ionicons } from '@expo/vector-icons';
 
 
-const locations=[
+import AsyncStorage from
+'@react-native-async-storage/async-storage';
 
-{
-time:'09:30 AM',
-place:'Office Entry',
-lat:'26.9124',
-lng:'75.7873'
-},
 
-{
-time:'12:15 PM',
-place:'Client Location',
-lat:'26.9140',
-lng:'75.7900'
-},
+import api from '../../api/api';
 
-{
-time:'03:00 PM',
-place:'Warehouse Area',
-lat:'26.9201',
-lng:'75.8002'
-}
 
-];
+
 
 
 const TrackingScreen=()=>{
+
+
+const [locations,setLocations]=useState([]);
+
+
+
+
+
+useEffect(()=>{
+
+
+loadLocations();
+
+
+},[]);
+
+
+
+
+
+
+
+const loadLocations=async()=>{
+
+
+try{
+
+
+const data=await AsyncStorage.getItem("employee");
+
+
+const employee=JSON.parse(data);
+
+
+
+const response=await api.get(
+
+`/locations/${employee.id}`
+
+);
+
+
+
+setLocations(response.data);
+
+
+
+}
+
+
+catch(error){
+
+
+console.log(
+
+"LOCATION LOAD ERROR:",
+
+error.message
+
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
 
 
 return(
@@ -45,8 +103,14 @@ return(
 
 
 <Text style={styles.title}>
+
 Location Tracking
+
 </Text>
+
+
+
+
 
 
 <View style={styles.statusCard}>
@@ -54,79 +118,161 @@ Location Tracking
 
 <View style={styles.row}>
 
+
 <Ionicons
+
 name="radio-button-on"
+
 size={24}
+
 color="green"
+
 />
 
+
+
 <Text style={styles.active}>
+
 Tracking Active
+
 </Text>
 
+
 </View>
+
+
+
 
 
 <Text style={styles.small}>
-Last updated : 03:00 PM
+
+
+Total Records : {locations.length}
+
+
 </Text>
 
 
+
+
 </View>
+
+
+
+
 
 
 
 <Text style={styles.heading}>
-Today's Location History
+
+Location History
+
 </Text>
+
+
+
+
+
 
 
 {
 
-locations.map((item,index)=>(
+
+locations.map(item=>(
 
 
-<View 
+<View
+
+
 style={styles.locationCard}
-key={index}
+
+
+key={item.id}
+
+
 >
+
+
+
 
 
 <View style={styles.row}>
 
 
 <Ionicons
+
+
 name="location"
+
+
 size={26}
+
+
 color="#2563EB"
+
+
 />
+
+
 
 
 <View>
 
 
+
 <Text style={styles.place}>
-{item.place}
+
+
+Location Captured
+
+
 </Text>
+
+
+
 
 
 <Text style={styles.time}>
-{item.time}
+
+
+{
+
+new Date(item.captured_at)
+.toLocaleString()
+
+}
+
+
 </Text>
 
 
-</View>
 
 
 </View>
+
+
+
+</View>
+
+
+
 
 
 
 <Text style={styles.coords}>
 
-Lat: {item.lat} | Lng: {item.lng}
+
+Lat: {item.latitude}
+
+{"\n"}
+
+Lng: {item.longitude}
+
 
 </Text>
+
+
+
 
 
 
@@ -140,94 +286,187 @@ Lat: {item.lat} | Lng: {item.lng}
 
 
 
+
+
+
+
 </ScrollView>
+
 
 )
 
+
 }
+
+
+
+
+
 
 
 export default TrackingScreen;
 
 
 
+
+
+
+
+
+
+
 const styles=StyleSheet.create({
 
 
+
 container:{
+
 flex:1,
+
 backgroundColor:'#F5F7FB',
+
 padding:20
+
 },
+
+
+
 
 
 title:{
+
 fontSize:26,
+
 fontWeight:'700',
+
 marginTop:40
+
 },
+
+
+
 
 
 statusCard:{
+
 backgroundColor:'white',
+
 padding:20,
+
 borderRadius:18,
+
 marginTop:25,
+
 elevation:3
+
 },
+
+
+
 
 
 row:{
+
 flexDirection:'row',
+
 alignItems:'center',
+
 gap:12
+
 },
+
+
+
 
 
 active:{
+
 fontSize:18,
+
 fontWeight:'700'
+
 },
+
+
+
 
 
 small:{
+
 marginTop:10,
+
 color:'gray'
+
 },
+
+
+
 
 
 heading:{
+
 fontSize:20,
+
 fontWeight:'700',
+
 marginTop:25,
+
 marginBottom:15
+
 },
+
+
+
 
 
 locationCard:{
+
 backgroundColor:'white',
+
 padding:18,
+
 borderRadius:15,
+
 marginBottom:15,
+
 elevation:3
+
 },
+
+
+
 
 
 place:{
+
 fontSize:16,
+
 fontWeight:'700'
+
 },
+
+
+
 
 
 time:{
+
 color:'gray'
+
 },
 
 
+
+
+
 coords:{
+
 marginTop:12,
+
 color:'#555'
+
 }
+
 
 
 });

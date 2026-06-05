@@ -16,6 +16,7 @@ const employeeRoutes=require("./routes/employeeRoutes");
 const visitRoutes=require("./routes/visitRoutes");
 const leaveRoutes=require("./routes/leaveRoutes");
 const locationRoutes=require("./routes/locationRoutes");
+const dashboardRoutes=require("./routes/dashboardRoutes");
 app.use(express.json());
 app.use(
 
@@ -36,6 +37,13 @@ leaveRoutes
 app.use(
 "/api/locations",
 locationRoutes
+);
+app.use(
+
+"/api/dashboard",
+
+dashboardRoutes
+
 );
 app.get("/",(req,res)=>{
 
