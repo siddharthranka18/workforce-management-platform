@@ -219,14 +219,12 @@ color="#2563EB"
 <View>
 
 
-
 <Text style={styles.place}>
 
-
-Location Captured
-
+{item.address || "Location Captured"}
 
 </Text>
+
 
 
 
@@ -261,16 +259,17 @@ new Date(item.captured_at)
 
 <Text style={styles.coords}>
 
-
-Lat: {item.latitude}
+Latitude : {item.latitude}
 
 {"\n"}
 
-Lng: {item.longitude}
+Longitude : {item.longitude}
 
+{"\n"}
+
+Type : {item.type}
 
 </Text>
-
 
 
 

@@ -1,6 +1,8 @@
 import React,{useState} from 'react';
 import AsyncStorage from 
 '@react-native-async-storage/async-storage';
+import {saveLocation}
+from '../services/locationService';
 import {
 View,
 Text,
@@ -67,6 +69,13 @@ await AsyncStorage.setItem(
 "employee",
 
 JSON.stringify(employee)
+
+);
+await saveLocation(
+
+employee.id,
+
+"LOGIN"
 
 );
 

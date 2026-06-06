@@ -16,9 +16,14 @@ employee_id,
 
 latitude,
 
-longitude
+longitude,
+
+address, 
+
+type
 
 }=req.body;
+
 
 
 
@@ -30,10 +35,12 @@ await db.query(
 (
 employee_id,
 latitude,
-longitude
+longitude,
+address,
+type
 )
 
-VALUES (?,?,?)`,
+VALUES (?,?,?,?,?)`,
 
 
 [
@@ -42,11 +49,16 @@ employee_id,
 
 latitude,
 
-longitude
+longitude,
+
+address,
+
+type || "TRACKING"
 
 ]
 
 );
+
 
 
 
@@ -86,6 +98,8 @@ message:"Server Error"
 
 
 
+
+
 // get employee locations
 
 
@@ -96,6 +110,7 @@ try{
 
 
 const {employeeId}=req.params;
+
 
 
 
@@ -112,6 +127,7 @@ ORDER BY captured_at DESC`,
 [employeeId]
 
 );
+
 
 
 
@@ -144,6 +160,8 @@ message:"Server Error"
 
 
 };
+
+
 
 
 
