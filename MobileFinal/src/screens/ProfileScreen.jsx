@@ -14,7 +14,8 @@ import {Ionicons} from '@expo/vector-icons';
 import AsyncStorage from
 '@react-native-async-storage/async-storage';
 
-
+import {saveLocation}
+from '../services/locationService';
 
 
 const ProfileScreen=({navigation})=>{
@@ -57,18 +58,66 @@ setEmployee(JSON.parse(data));
 
 
 
-
 const logout=async()=>{
 
 
-await AsyncStorage.removeItem("employee");
+try{
 
 
-navigation.replace("Login");
+if(employee){
+
+
+await saveLocation(
+
+employee.id,
+
+"LOGOUT"
+
+);
+
+
+}
+
+
+
+
+await AsyncStorage.removeItem(
+
+"employee"
+
+);
+
+
+
+navigation.replace(
+
+"Login"
+
+);
+
+
+
+
+}
+
+
+catch(error){
+
+
+console.log(
+
+"LOGOUT ERROR:",
+
+error.message
+
+);
+
+
+}
+
 
 
 };
-
 
 
 
