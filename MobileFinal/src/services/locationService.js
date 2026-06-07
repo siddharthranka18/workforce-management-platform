@@ -33,12 +33,14 @@ return;
 
 
 
+
 const currentLocation=
 await Location.getCurrentPositionAsync({
 
-accuracy:Location.Accuracy.High
+accuracy:Location.Accuracy.BestForNavigation
 
 });
+
 
 
 
@@ -48,6 +50,7 @@ const latitude=currentLocation.coords.latitude;
 
 
 const longitude=currentLocation.coords.longitude;
+
 
 
 
@@ -68,7 +71,9 @@ longitude
 
 
 
+
 let address="Unknown Location";
+
 
 
 
@@ -81,11 +86,32 @@ const place=addressData[0];
 
 address=
 
-`${place.name || ""}, ${place.city || ""}, ${place.region || ""}, ${place.country || ""}`;
+[
 
 
-}
 
+place.street,
+
+place.district,
+
+
+place.city,
+
+place.region,
+
+place.postalCode,
+
+place.country
+
+]
+
+.filter(Boolean)
+
+.join(", ");
+
+
+
+}   // ✅ this was missing
 
 
 
@@ -104,6 +130,7 @@ longitude,
 address
 
 );
+
 
 
 
@@ -130,6 +157,8 @@ type
 }
 
 );
+
+
 
 
 
