@@ -1,13 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 
 
-const api=axios.create({
+export default axios.create({
 
-baseURL:"http://10.175.236.237:5000/api",
-
-timeout:5000
+baseURL:"https://monument-footprint-corporate.ngrok-free.dev/api"
 
 });
-
-
-export default api;
