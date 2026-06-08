@@ -16,6 +16,8 @@ import AsyncStorage from
 
 import {saveLocation}
 from '../services/locationService';
+import {stopTracking}
+from '../services/trackingService';
 
 
 const ProfileScreen=({navigation})=>{
@@ -65,7 +67,7 @@ try{
 
 
 if(employee){
-
+stopTracking();
 
 await saveLocation(
 

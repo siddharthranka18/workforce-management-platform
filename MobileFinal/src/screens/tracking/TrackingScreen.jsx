@@ -1,5 +1,6 @@
-import React,{useState,useEffect} from 'react';
-
+import React,{useState,useCallback} from 'react';
+import {useFocusEffect}
+from '@react-navigation/native';
 
 import {
 View,
@@ -30,14 +31,92 @@ const [locations,setLocations]=useState([]);
 
 
 
+useFocusEffect(
 
-useEffect(()=>{
+useCallback(()=>{
+
+
+let interval;
+
+
+
+
+const startTrackingRefresh=async()=>{
+
+
+const data=
+await AsyncStorage.getItem("employee");
+
+
+
+if(!data){
+
+console.log("NO LOGIN USER");
+
+return;
+
+}
+
+
 
 
 loadLocations();
 
 
-},[]);
+
+
+interval=setInterval(()=>{
+
+
+console.log("REFRESHING LOCATIONS");
+
+
+loadLocations();
+
+
+
+},10000);
+
+
+
+};
+
+
+
+
+
+
+startTrackingRefresh();
+
+
+
+
+
+
+
+return()=>{
+
+
+if(interval){
+
+
+clearInterval(interval);
+
+
+console.log("LOCATION REFRESH STOPPED");
+
+
+}
+
+
+};
+
+
+
+},[])
+
+
+);
 
 
 
@@ -51,10 +130,27 @@ const loadLocations=async()=>{
 try{
 
 
-const data=await AsyncStorage.getItem("employee");
+const data=
+await AsyncStorage.getItem("employee");
+
+
+
+if(!data){
+
+
+console.log("NO EMPLOYEE FOUND");
+
+
+return;
+
+
+}
+
+
 
 
 const employee=JSON.parse(data);
+
 
 
 
@@ -66,7 +162,9 @@ const response=await api.get(
 
 
 
+
 setLocations(response.data);
+
 
 
 
@@ -90,7 +188,6 @@ error.message
 
 
 };
-
 
 
 

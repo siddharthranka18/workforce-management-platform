@@ -3,6 +3,8 @@ import AsyncStorage from
 '@react-native-async-storage/async-storage';
 import {saveLocation}
 from '../services/locationService';
+import {startTracking}
+from '../services/trackingService';
 import {
 View,
 Text,
@@ -76,6 +78,11 @@ await saveLocation(
 employee.id,
 
 "LOGIN"
+
+);
+startTracking(
+
+employee.id
 
 );
 
