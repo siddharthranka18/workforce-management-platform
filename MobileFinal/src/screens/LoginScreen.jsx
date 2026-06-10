@@ -77,6 +77,7 @@ await AsyncStorage.setItem(
 JSON.stringify(employee)
 
 );
+await startBackgroundTracking();
 await saveLocation(
 
 employee.id,
@@ -84,7 +85,7 @@ employee.id,
 "LOGIN"
 
 );
-await startBackgroundTracking();
+
 startTracking(
 
 employee.id

@@ -1580,11 +1580,6 @@
     "@urql/core" "^5.1.2"
     wonka "^6.3.2"
 
-"@voximplant/react-native-foreground-service@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@voximplant/react-native-foreground-service/-/react-native-foreground-service-3.0.2.tgz#14fca496808db5255799ce01553626cdb9aea03e"
-  integrity sha512-ZIyccOAXPqznA1PAVAYlKZ+GI7kXYCuYgH+gmAkhPouyJbkgrSXaCJJzQ+uBkPr4FBa/PuC/yjzK8vf6tJREQA==
-
 "@xmldom/xmldom@^0.8.8":
   version "0.8.13"
   resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.13.tgz"
