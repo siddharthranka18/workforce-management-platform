@@ -19,7 +19,10 @@ from '../services/locationService';
 import {stopTracking}
 from '../services/trackingService';
 
-
+import {
+stopBackgroundTracking
+}
+from '../services/backgroundLocationService';
 const ProfileScreen=({navigation})=>{
 
 
@@ -68,7 +71,7 @@ try{
 
 if(employee){
 stopTracking();
-
+await stopBackgroundTracking();
 await saveLocation(
 
 employee.id,

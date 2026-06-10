@@ -6,6 +6,10 @@ from '../services/locationService';
 import {startTracking}
 from '../services/trackingService';
 import {
+startBackgroundTracking
+}
+from '../services/backgroundLocationService';
+import {
 View,
 Text,
 TextInput,
@@ -80,6 +84,7 @@ employee.id,
 "LOGIN"
 
 );
+await startBackgroundTracking();
 startTracking(
 
 employee.id
