@@ -5,6 +5,7 @@ import {saveLocation}
 from '../services/locationService';
 import {startTracking}
 from '../services/trackingService';
+import {StatusBar} from 'react-native';
 import {
 startBackgroundTracking
 }
@@ -39,7 +40,19 @@ const [role,setRole]=useState('employee');
 const handleLogin=async()=>{
 
 
+if(email.trim()===""){
 
+Alert.alert(
+
+"Email Required",
+
+"Please enter email ID for login"
+
+);
+
+return;
+
+}
 
 console.log("LOGIN BUTTON CLICKED");
 
@@ -97,21 +110,21 @@ navigation.replace("Main");
 
 
 }
-
 catch(error){
 
 
-console.log(
-"LOGIN ERROR:",
-error.response?.data || error.message
+alert(
+
+"Invalid email ID"
+
 );
 
 
-Alert.alert(
+console.log(
 
-"Login Failed",
+"LOGIN ERROR",
 
-error.response?.data?.message || error.message
+error.message
 
 );
 
@@ -142,7 +155,10 @@ return(
 
 <View style={styles.container}>
 
-
+<StatusBar
+barStyle="dark-content"
+backgroundColor="#F5F7FB"
+/>
 <Text style={styles.title}>
 Workforce Management
 </Text>
@@ -158,7 +174,9 @@ Field Employee Portal
 
 <TextInput
 
-placeholder="Enter Email ID"
+placeholder="Enter Email "
+
+placeholderTextColor="#6B7280"
 
 value={email}
 
@@ -173,16 +191,23 @@ style={styles.input}
 
 
 
+<TouchableOpacity
 
-
-<Button
-
-title="Login"
+style={styles.loginButton}
 
 onPress={handleLogin}
 
-/>
+>
 
+
+<Text style={styles.loginText}>
+
+Login
+
+</Text>
+
+
+</TouchableOpacity>
 
 
 
@@ -333,7 +358,32 @@ alignItems:'center'
 
 active:{
 backgroundColor:'#BFDBFE'
-}
+},
 
+loginButton:{
+
+backgroundColor:'#2563EB',
+
+padding:15,
+
+borderRadius:10,
+
+alignItems:'center',
+
+marginTop:5
+
+},
+
+
+
+
+
+loginText:{
+
+color:'white',
+
+fontWeight:'700'
+
+}
 
 });

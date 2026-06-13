@@ -133,6 +133,30 @@ return(
 <ScrollView style={styles.container}>
 
 
+<TouchableOpacity
+
+style={styles.backButton}
+
+onPress={()=>navigation.goBack()}
+
+>
+
+
+<Ionicons
+
+name="arrow-back"
+
+size={28}
+
+color="#111827"
+
+/>
+
+
+</TouchableOpacity>
+
+
+
 <View style={styles.header}>
 
 
@@ -354,6 +378,18 @@ export default ProfileScreen;
 
 const styles=StyleSheet.create({
 
+
+backButton:{
+
+marginTop:35,
+
+width:40,
+
+height:40,
+
+justifyContent:'center'
+
+},
 
 container:{
 flex:1,
