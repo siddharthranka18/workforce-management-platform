@@ -1,4 +1,5 @@
 import React,{useState,useCallback} from 'react';
+
 import {useFocusEffect}
 from '@react-navigation/native';
 
@@ -10,7 +11,7 @@ ScrollView
 } from 'react-native';
 
 
-import { Ionicons } from '@expo/vector-icons';
+import {Ionicons} from '@expo/vector-icons';
 
 
 import AsyncStorage from
@@ -31,6 +32,7 @@ const [locations,setLocations]=useState([]);
 
 
 
+
 useFocusEffect(
 
 useCallback(()=>{
@@ -40,18 +42,14 @@ let interval;
 
 
 
-
 const startTrackingRefresh=async()=>{
 
 
-const data=
+const data =
 await AsyncStorage.getItem("employee");
 
 
-
 if(!data){
-
-console.log("NO LOGIN USER");
 
 return;
 
@@ -59,20 +57,14 @@ return;
 
 
 
-
 loadLocations();
-
 
 
 
 interval=setInterval(()=>{
 
 
-console.log("REFRESHING LOCATIONS");
-
-
 loadLocations();
-
 
 
 },10000);
@@ -84,12 +76,7 @@ loadLocations();
 
 
 
-
-
 startTrackingRefresh();
-
-
-
 
 
 
@@ -99,12 +86,7 @@ return()=>{
 
 if(interval){
 
-
 clearInterval(interval);
-
-
-console.log("LOCATION REFRESH STOPPED");
-
 
 }
 
@@ -124,37 +106,34 @@ console.log("LOCATION REFRESH STOPPED");
 
 
 
+
 const loadLocations=async()=>{
 
 
 try{
 
 
-const data=
+const data =
 await AsyncStorage.getItem("employee");
 
 
 
 if(!data){
 
-
-console.log("NO EMPLOYEE FOUND");
-
-
 return;
-
 
 }
 
 
 
 
-const employee=JSON.parse(data);
+const employee =
+JSON.parse(data);
 
 
 
-
-const response=await api.get(
+const response =
+await api.get(
 
 `/locations/${employee.id}`
 
@@ -162,9 +141,7 @@ const response=await api.get(
 
 
 
-
 setLocations(response.data);
-
 
 
 
@@ -186,8 +163,9 @@ error.message
 }
 
 
-
 };
+
+
 
 
 
@@ -240,15 +218,11 @@ Tracking Active
 
 
 
-
 <Text style={styles.small}>
-
 
 Total Records : {locations.length}
 
-
 </Text>
-
 
 
 
@@ -278,17 +252,14 @@ Location History
 locations.map(item=>(
 
 
-<View
 
+<View
 
 style={styles.locationCard}
 
-
 key={item.id}
 
-
 >
-
 
 
 
@@ -298,30 +269,30 @@ key={item.id}
 
 <Ionicons
 
-
 name="location"
-
 
 size={26}
 
-
 color="#2563EB"
-
 
 />
 
 
 
+<View style={styles.addressBox}>
 
-<View>
 
+<Text
 
-<Text style={styles.place}>
+style={styles.place}
+
+numberOfLines={2}
+
+>
 
 {item.address || "Location Captured"}
 
 </Text>
-
 
 
 
@@ -333,6 +304,7 @@ color="#2563EB"
 {
 
 new Date(item.captured_at)
+
 .toLocaleString()
 
 }
@@ -342,8 +314,8 @@ new Date(item.captured_at)
 
 
 
-
 </View>
+
 
 
 
@@ -356,6 +328,7 @@ new Date(item.captured_at)
 
 <Text style={styles.coords}>
 
+
 Latitude : {item.latitude}
 
 {"\n"}
@@ -365,6 +338,7 @@ Longitude : {item.longitude}
 {"\n"}
 
 Type : {item.type}
+
 
 </Text>
 
@@ -384,15 +358,13 @@ Type : {item.type}
 
 
 
-
-
 </ScrollView>
 
 
-)
+);
 
 
-}
+};
 
 
 
@@ -410,9 +382,7 @@ export default TrackingScreen;
 
 
 
-
 const styles=StyleSheet.create({
-
 
 
 container:{
@@ -428,7 +398,6 @@ padding:20
 
 
 
-
 title:{
 
 fontSize:26,
@@ -438,7 +407,6 @@ fontWeight:'700',
 marginTop:40
 
 },
-
 
 
 
@@ -460,12 +428,11 @@ elevation:3
 
 
 
-
 row:{
 
 flexDirection:'row',
 
-alignItems:'center',
+alignItems:'flex-start',
 
 gap:12
 
@@ -486,7 +453,6 @@ fontWeight:'700'
 
 
 
-
 small:{
 
 marginTop:10,
@@ -494,7 +460,6 @@ marginTop:10,
 color:'gray'
 
 },
-
 
 
 
@@ -510,7 +475,6 @@ marginTop:25,
 marginBottom:15
 
 },
-
 
 
 
@@ -532,25 +496,37 @@ elevation:3
 
 
 
+addressBox:{
+
+flex:1
+
+},
+
+
+
 
 place:{
 
 fontSize:16,
 
-fontWeight:'700'
+fontWeight:'700',
+
+flexWrap:'wrap',
+
+color:'#111827'
 
 },
-
 
 
 
 
 time:{
 
-color:'gray'
+color:'gray',
+
+marginTop:3
 
 },
-
 
 
 
@@ -562,7 +538,6 @@ marginTop:12,
 color:'#555'
 
 }
-
 
 
 });
