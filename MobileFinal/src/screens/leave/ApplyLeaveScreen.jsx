@@ -8,9 +8,9 @@ Text,
 StyleSheet,
 ScrollView,
 TextInput,
-TouchableOpacity
+TouchableOpacity,
+Alert
 } from 'react-native';
-
 
 import {Ionicons} from '@expo/vector-icons';
 
@@ -44,7 +44,22 @@ const [requests,setRequests]=useState([]);
 
 const [employee,setEmployee]=useState(null);
 
+const formatDate=(date)=>{
 
+let year=date.getFullYear();
+
+let month=String(
+date.getMonth()+1
+).padStart(2,'0');
+
+let day=String(
+date.getDate()
+).padStart(2,'0');
+
+
+return `${year}-${month}-${day}`;
+
+};
 
 
 
@@ -117,20 +132,109 @@ error.message
 
 const submitLeave=async()=>{
 
+
 console.log("LEAVE BUTTON CLICKED");
+
+
 try{
 
 
 if(!employee){
 
+return;
 
-console.log("Employee not loaded yet");
+}
+
+
+
+const selectedFrom =
+formatDate(fromDate);
+
+
+
+const selectedTo =
+
+leaveType==="Full Day"
+
+?
+
+formatDate(toDate)
+
+:
+
+selectedFrom;
+
+
+
+
+const alreadyApplied =
+requests.some(item=>{
+
+
+const oldFrom =
+new Date(item.from_date)
+.toLocaleDateString(
+'en-CA',
+{
+timeZone:'Asia/Kolkata'
+}
+);
+
+
+
+const oldTo =
+item.to_date
+
+?
+
+new Date(item.to_date)
+.toLocaleDateString(
+'en-CA',
+{
+timeZone:'Asia/Kolkata'
+}
+)
+
+:
+
+oldFrom;
+
+
+
+return (
+
+selectedFrom >= oldFrom &&
+
+selectedFrom <= oldTo
+
+);
+
+
+});
+
+
+
+
+if(alreadyApplied){
+
+
+Alert.alert(
+
+"Leave Already Applied",
+
+"You have already applied leave for this date"
+
+);
 
 
 return;
 
 
 }
+
+
+
+
 
 
 
@@ -156,7 +260,7 @@ leaveType==="Full Day"
 
 from_date:
 
-fromDate.toISOString().split("T")[0],
+selectedFrom,
 
 
 
@@ -166,7 +270,7 @@ leaveType==="Full Day"
 
 ?
 
-toDate.toISOString().split("T")[0]
+selectedTo
 
 :
 
@@ -182,24 +286,16 @@ reason:reason
 
 
 
-console.log(
 
-"SENDING LEAVE:",
-
-leaveData
-
-);
-
-
-
-
-const response=await api.post(
+const response =
+await api.post(
 
 "/leaves/apply",
 
 leaveData
 
 );
+
 
 
 
@@ -219,7 +315,6 @@ setReason("");
 
 
 loadLeaves();
-
 
 
 
@@ -669,7 +764,24 @@ color="#2563EB"
 <Text>
 
 
-{item.from_date?.slice(0,10)}
+{
+
+new Date(item.from_date)
+
+.toLocaleDateString(
+
+'en-CA',
+
+{
+
+timeZone:'Asia/Kolkata'
+
+}
+
+)
+
+}
+
 
 
 {
@@ -677,25 +789,32 @@ color="#2563EB"
 
 item.to_date
 
-
 ?
 
+" - " +
 
-" - "+item.to_date.slice(0,10)
+new Date(item.to_date)
 
+.toLocaleDateString(
+
+'en-CA',
+
+{
+
+timeZone:'Asia/Kolkata'
+
+}
+
+)
 
 :
 
-
 ""
-
 
 }
 
 
 </Text>
-
-
 
 
 

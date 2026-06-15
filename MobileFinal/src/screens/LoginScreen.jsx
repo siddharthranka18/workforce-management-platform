@@ -5,7 +5,6 @@ import {saveLocation}
 from '../services/locationService';
 import {startTracking}
 from '../services/trackingService';
-import {StatusBar} from 'react-native';
 import {
 startBackgroundTracking
 }
@@ -155,10 +154,7 @@ return(
 
 <View style={styles.container}>
 
-<StatusBar
-barStyle="dark-content"
-backgroundColor="#F5F7FB"
-/>
+
 <Text style={styles.title}>
 Workforce Management
 </Text>
