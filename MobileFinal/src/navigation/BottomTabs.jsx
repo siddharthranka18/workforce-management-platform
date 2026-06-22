@@ -48,14 +48,13 @@ screenOptions={({route})=>({
 headerShown:false,
 
 
-
 tabBarStyle:{
 
-height:85,
+height:115,
 
-paddingBottom:18,
+paddingBottom:35,
 
-paddingTop:5,
+paddingTop:8,
 
 backgroundColor:'#fff',
 
@@ -74,7 +73,7 @@ fontSize:11,
 
 fontWeight:'600',
 
-marginTop:2
+marginTop:3
 
 },
 
