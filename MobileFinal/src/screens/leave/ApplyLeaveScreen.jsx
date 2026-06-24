@@ -1,6 +1,8 @@
 import React,{useState,useEffect} from 'react';
 
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker 
+from '@react-native-community/datetimepicker';
+
 
 import {
 View,
@@ -9,17 +11,22 @@ StyleSheet,
 ScrollView,
 TextInput,
 TouchableOpacity,
-Alert
+Alert,
+ActivityIndicator
 } from 'react-native';
 
-import {Ionicons} from '@expo/vector-icons';
+
+import {Ionicons}
+from '@expo/vector-icons';
 
 
-import AsyncStorage from
-'@react-native-async-storage/async-storage';
+import AsyncStorage
+from '@react-native-async-storage/async-storage';
 
 
 import api from '../../api/api';
+
+
 
 
 
@@ -44,22 +51,44 @@ const [requests,setRequests]=useState([]);
 
 const [employee,setEmployee]=useState(null);
 
+const [loading,setLoading]=useState(true);
+
+
+
+
+
+
 const formatDate=(date)=>{
+
 
 let year=date.getFullYear();
 
+
 let month=String(
+
 date.getMonth()+1
+
 ).padStart(2,'0');
 
+
+
 let day=String(
+
 date.getDate()
+
 ).padStart(2,'0');
+
 
 
 return `${year}-${month}-${day}`;
 
+
 };
+
+
+
+
+
 
 
 
@@ -76,16 +105,25 @@ loadLeaves();
 
 
 
+
+
+
 const loadLeaves=async()=>{
 
 
 try{
 
 
-const data=await AsyncStorage.getItem("employee");
+const data =
+await AsyncStorage.getItem(
+"employee"
+);
 
 
-const emp=JSON.parse(data);
+
+const emp =
+JSON.parse(data);
+
 
 
 setEmployee(emp);
@@ -93,7 +131,8 @@ setEmployee(emp);
 
 
 
-const response=await api.get(
+const response =
+await api.get(
 
 `/leaves/${emp.id}`
 
@@ -108,13 +147,28 @@ setRequests(response.data);
 }
 
 
+
 catch(error){
 
 
 console.log(
+
 "LOAD LEAVE ERROR:",
+
 error.message
+
 );
+
+
+}
+
+
+
+
+finally{
+
+
+setLoading(false);
 
 
 }
@@ -130,10 +184,10 @@ error.message
 
 
 
+
+
+
 const submitLeave=async()=>{
-
-
-console.log("LEAVE BUTTON CLICKED");
 
 
 try{
@@ -147,8 +201,10 @@ return;
 
 
 
+
 const selectedFrom =
 formatDate(fromDate);
+
 
 
 
@@ -167,6 +223,10 @@ selectedFrom;
 
 
 
+
+
+
+
 const alreadyApplied =
 requests.some(item=>{
 
@@ -179,6 +239,7 @@ new Date(item.from_date)
 timeZone:'Asia/Kolkata'
 }
 );
+
 
 
 
@@ -201,16 +262,21 @@ oldFrom;
 
 
 
-return (
 
-selectedFrom >= oldFrom &&
 
-selectedFrom <= oldTo
+return(
+
+selectedFrom>=oldFrom &&
+
+selectedFrom<=oldTo
 
 );
 
 
+
 });
+
+
 
 
 
@@ -238,6 +304,7 @@ return;
 
 
 
+
 const leaveData={
 
 
@@ -258,9 +325,8 @@ leaveType==="Full Day"
 
 
 
-from_date:
 
-selectedFrom,
+from_date:selectedFrom,
 
 
 
@@ -287,7 +353,9 @@ reason:reason
 
 
 
-const response =
+
+
+
 await api.post(
 
 "/leaves/apply",
@@ -296,16 +364,6 @@ leaveData
 
 );
 
-
-
-
-console.log(
-
-"LEAVE RESPONSE:",
-
-response.data
-
-);
 
 
 
@@ -318,12 +376,12 @@ loadLeaves();
 
 
 
+
 }
 
 
 
 catch(error){
-
 
 
 console.log(
@@ -335,12 +393,54 @@ error.response?.data || error.message
 );
 
 
-
 }
 
 
 
 };
+
+
+
+
+
+
+
+
+
+if(loading){
+
+
+return(
+
+<View style={styles.loader}>
+
+
+<ActivityIndicator
+
+size="large"
+
+color="#2563EB"
+
+/>
+
+
+
+<Text style={styles.loadingText}>
+
+Loading leave data...
+
+</Text>
+
+
+
+</View>
+
+
+);
+
+
+}
+
 
 
 
@@ -365,6 +465,7 @@ Apply Leave
 
 
 
+
 <Text style={styles.label}>
 
 Leave Duration
@@ -375,25 +476,21 @@ Leave Duration
 
 
 
+
 <View style={styles.typeRow}>
 
 
-
-
 <TouchableOpacity
-
 
 style={[
 
 styles.typeButton,
 
-leaveType==='Full Day' && styles.selected
+leaveType==="Full Day" && styles.selected
 
 ]}
 
-
-onPress={()=>setLeaveType('Full Day')}
-
+onPress={()=>setLeaveType("Full Day")}
 
 >
 
@@ -405,9 +502,7 @@ Full Day
 </Text>
 
 
-
 </TouchableOpacity>
-
 
 
 
@@ -417,18 +512,15 @@ Full Day
 
 <TouchableOpacity
 
-
 style={[
 
 styles.typeButton,
 
-leaveType==='Half Day' && styles.selected
+leaveType==="Half Day" && styles.selected
 
 ]}
 
-
-onPress={()=>setLeaveType('Half Day')}
-
+onPress={()=>setLeaveType("Half Day")}
 
 >
 
@@ -440,9 +532,7 @@ Half Day
 </Text>
 
 
-
 </TouchableOpacity>
-
 
 
 
@@ -470,15 +560,15 @@ onPress={()=>setShowFrom(true)}
 
 {
 
-leaveType==='Half Day'
+leaveType==="Half Day"
 
 ?
 
-'Date : '
+"Date : "
 
 :
 
-'From : '
+"From : "
 
 }
 
@@ -497,6 +587,7 @@ leaveType==='Half Day'
 
 
 
+
 {
 
 
@@ -505,11 +596,9 @@ showFrom &&
 
 <DateTimePicker
 
-
 value={fromDate}
 
 mode="date"
-
 
 onChange={(event,date)=>{
 
@@ -543,7 +632,7 @@ setFromDate(date);
 {
 
 
-leaveType==='Full Day' &&
+leaveType==="Full Day" &&
 
 
 <>
@@ -551,9 +640,7 @@ leaveType==='Full Day' &&
 
 <TouchableOpacity
 
-
 style={styles.input}
-
 
 onPress={()=>setShowTo(true)}
 
@@ -575,17 +662,14 @@ To : {toDate.toDateString()}
 
 {
 
-
 showTo &&
 
 
 <DateTimePicker
 
-
 value={toDate}
 
 mode="date"
-
 
 onChange={(event,date)=>{
 
@@ -609,7 +693,6 @@ setToDate(date);
 }
 
 
-
 </>
 
 
@@ -624,30 +707,17 @@ setToDate(date);
 
 
 
-
 <TextInput
-
 
 placeholder="Reason"
 
-
-style={[
-
-styles.input,
-
-styles.reason
-
-]}
-
+style={[styles.input,styles.reason]}
 
 multiline
 
-
 value={reason}
 
-
 onChangeText={setReason}
-
 
 />
 
@@ -658,14 +728,12 @@ onChangeText={setReason}
 
 
 
-<TouchableOpacity
 
+<TouchableOpacity
 
 style={styles.submit}
 
-
 onPress={submitLeave}
-
 
 >
 
@@ -678,7 +746,6 @@ Submit Request
 
 
 </TouchableOpacity>
-
 
 
 
@@ -702,6 +769,8 @@ My Leave Requests
 
 
 
+
+
 {
 
 
@@ -710,15 +779,11 @@ requests.map(item=>(
 
 <View
 
-
 style={styles.card}
-
 
 key={item.id}
 
-
 >
-
 
 
 
@@ -728,18 +793,13 @@ key={item.id}
 
 <Ionicons
 
-
 name="calendar"
-
 
 size={25}
 
-
 color="#2563EB"
 
-
 />
-
 
 
 
@@ -748,12 +808,9 @@ color="#2563EB"
 <View>
 
 
-
 <Text style={styles.leave}>
 
-
 {item.leave_type}
-
 
 </Text>
 
@@ -767,25 +824,17 @@ color="#2563EB"
 {
 
 new Date(item.from_date)
-
 .toLocaleDateString(
-
 'en-CA',
-
 {
-
 timeZone:'Asia/Kolkata'
-
 }
-
 )
 
 }
 
 
-
 {
-
 
 item.to_date
 
@@ -794,17 +843,11 @@ item.to_date
 " - " +
 
 new Date(item.to_date)
-
 .toLocaleDateString(
-
 'en-CA',
-
 {
-
 timeZone:'Asia/Kolkata'
-
 }
-
 )
 
 :
@@ -822,9 +865,7 @@ timeZone:'Asia/Kolkata'
 
 
 
-
 </View>
-
 
 
 
@@ -835,37 +876,25 @@ timeZone:'Asia/Kolkata'
 
 <Text
 
-
 style={
-
 
 item.status==="APPROVED"
 
-
 ?
-
 
 styles.approved
 
-
 :
-
 
 styles.pending
 
-
 }
-
 
 >
 
-
 {item.status}
 
-
 </Text>
-
-
 
 
 
@@ -887,11 +916,10 @@ styles.pending
 </ScrollView>
 
 
-)
+);
 
 
-}
-
+};
 
 
 
@@ -908,9 +936,7 @@ export default ApplyLeaveScreen;
 
 
 
-
 const styles=StyleSheet.create({
-
 
 
 container:{
@@ -923,6 +949,31 @@ padding:20
 
 },
 
+
+
+loader:{
+
+flex:1,
+
+justifyContent:'center',
+
+alignItems:'center',
+
+backgroundColor:'#F5F7FB'
+
+},
+
+
+
+loadingText:{
+
+marginTop:15,
+
+color:'#6B7280',
+
+fontWeight:'600'
+
+},
 
 
 
@@ -940,7 +991,6 @@ marginBottom:20
 
 
 
-
 label:{
 
 fontWeight:'700',
@@ -951,7 +1001,6 @@ marginBottom:10
 
 
 
-
 typeRow:{
 
 flexDirection:'row',
@@ -959,7 +1008,6 @@ flexDirection:'row',
 gap:15
 
 },
-
 
 
 
@@ -981,7 +1029,6 @@ elevation:2
 
 
 
-
 selected:{
 
 borderWidth:2,
@@ -989,7 +1036,6 @@ borderWidth:2,
 borderColor:'#2563EB'
 
 },
-
 
 
 
@@ -1007,7 +1053,6 @@ marginTop:15
 
 
 
-
 reason:{
 
 height:90,
@@ -1015,7 +1060,6 @@ height:90,
 textAlignVertical:'top'
 
 },
-
 
 
 
@@ -1035,7 +1079,6 @@ marginTop:20
 
 
 
-
 submitText:{
 
 color:'white',
@@ -1043,7 +1086,6 @@ color:'white',
 fontWeight:'700'
 
 },
-
 
 
 
@@ -1058,7 +1100,6 @@ marginTop:30,
 marginBottom:15
 
 },
-
 
 
 
@@ -1078,7 +1119,6 @@ elevation:3
 
 
 
-
 row:{
 
 flexDirection:'row',
@@ -1088,7 +1128,6 @@ gap:12,
 alignItems:'center'
 
 },
-
 
 
 
@@ -1102,7 +1141,6 @@ fontSize:16
 
 
 
-
 approved:{
 
 color:'green',
@@ -1112,7 +1150,6 @@ fontWeight:'700',
 marginTop:12
 
 },
-
 
 
 

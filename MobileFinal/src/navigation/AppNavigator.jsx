@@ -1,20 +1,35 @@
-import React,{useEffect,useState} from 'react';
+import React from 'react';
 
-import {NavigationContainer} 
+
+import {
+NavigationContainer
+}
 from '@react-navigation/native';
 
-import {createNativeStackNavigator} 
+
+import {
+createNativeStackNavigator
+}
 from '@react-navigation/native-stack';
 
-import AsyncStorage 
-from '@react-native-async-storage/async-storage';
 
 
-import LoginScreen from '../screens/LoginScreen';
+import SplashScreen
+from '../screens/SplashScreen';
 
-import BottomTabs from './BottomTabs';
 
-import ProfileScreen from '../screens/ProfileScreen';
+import LoginScreen
+from '../screens/LoginScreen';
+
+
+import BottomTabs
+from './BottomTabs';
+
+
+import ProfileScreen
+from '../screens/ProfileScreen';
+
+
 
 
 
@@ -24,84 +39,10 @@ createNativeStackNavigator();
 
 
 
+
+
+
 const AppNavigator=()=>{
-
-
-const [loading,setLoading] =
-useState(true);
-
-
-const [initialScreen,setInitialScreen] =
-useState("Login");
-
-
-
-
-useEffect(()=>{
-
-
-checkLogin();
-
-
-},[]);
-
-
-
-
-
-const checkLogin =
-async()=>{
-
-
-const employee =
-await AsyncStorage.getItem(
-"employee"
-);
-
-
-
-if(employee){
-
-
-setInitialScreen(
-"Main"
-);
-
-
-}
-
-
-else{
-
-
-setInitialScreen(
-"Login"
-);
-
-
-}
-
-
-
-
-setLoading(false);
-
-
-
-};
-
-
-
-
-
-if(loading){
-
-return null;
-
-}
-
-
-
 
 
 return(
@@ -111,9 +52,7 @@ return(
 
 <Stack.Navigator
 
-
-initialRouteName={initialScreen}
-
+initialRouteName="Splash"
 
 screenOptions={{
 
@@ -124,6 +63,18 @@ headerShown:false
 >
 
 
+
+<Stack.Screen
+
+name="Splash"
+
+component={SplashScreen}
+
+/>
+
+
+
+
 <Stack.Screen
 
 name="Login"
@@ -131,6 +82,7 @@ name="Login"
 component={LoginScreen}
 
 />
+
 
 
 
@@ -144,6 +96,7 @@ component={BottomTabs}
 
 
 
+
 <Stack.Screen
 
 name="Profile"
@@ -151,6 +104,7 @@ name="Profile"
 component={ProfileScreen}
 
 />
+
 
 
 

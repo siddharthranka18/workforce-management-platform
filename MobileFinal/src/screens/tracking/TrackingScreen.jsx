@@ -3,22 +3,26 @@ import React,{useState,useCallback} from 'react';
 import {useFocusEffect}
 from '@react-navigation/native';
 
+
 import {
 View,
 Text,
 StyleSheet,
-ScrollView
+ScrollView,
+ActivityIndicator
 } from 'react-native';
 
 
-import {Ionicons} from '@expo/vector-icons';
+import {Ionicons}
+from '@expo/vector-icons';
 
 
-import AsyncStorage from
-'@react-native-async-storage/async-storage';
+import AsyncStorage
+from '@react-native-async-storage/async-storage';
 
 
 import api from '../../api/api';
+
 
 
 
@@ -28,6 +32,8 @@ const TrackingScreen=()=>{
 
 
 const [locations,setLocations]=useState([]);
+
+const [loading,setLoading]=useState(true);
 
 
 
@@ -45,19 +51,7 @@ let interval;
 const startTrackingRefresh=async()=>{
 
 
-const data =
-await AsyncStorage.getItem("employee");
-
-
-if(!data){
-
-return;
-
-}
-
-
-
-loadLocations();
+await loadLocations();
 
 
 
@@ -107,6 +101,7 @@ clearInterval(interval);
 
 
 
+
 const loadLocations=async()=>{
 
 
@@ -114,7 +109,9 @@ try{
 
 
 const data =
-await AsyncStorage.getItem("employee");
+await AsyncStorage.getItem(
+"employee"
+);
 
 
 
@@ -126,9 +123,9 @@ return;
 
 
 
-
 const employee =
 JSON.parse(data);
+
 
 
 
@@ -141,6 +138,7 @@ await api.get(
 
 
 
+
 setLocations(response.data);
 
 
@@ -148,7 +146,9 @@ setLocations(response.data);
 }
 
 
+
 catch(error){
+
 
 
 console.log(
@@ -160,10 +160,64 @@ error.message
 );
 
 
+
 }
 
 
+
+finally{
+
+
+setLoading(false);
+
+
+}
+
+
+
 };
+
+
+
+
+
+
+
+
+if(loading){
+
+
+return(
+
+<View style={styles.loader}>
+
+
+<ActivityIndicator
+
+size="large"
+
+color="#2563EB"
+
+/>
+
+
+
+<Text style={styles.loadingText}>
+
+Loading locations...
+
+</Text>
+
+
+
+</View>
+
+
+);
+
+
+}
+
 
 
 
@@ -188,6 +242,8 @@ Location Tracking
 
 
 
+
+
 <View style={styles.statusCard}>
 
 
@@ -203,6 +259,7 @@ size={24}
 color="green"
 
 />
+
 
 
 
@@ -234,6 +291,7 @@ Total Records : {locations.length}
 
 
 
+
 <Text style={styles.heading}>
 
 Location History
@@ -246,11 +304,11 @@ Location History
 
 
 
+
 {
 
 
 locations.map(item=>(
-
 
 
 <View
@@ -279,6 +337,7 @@ color="#2563EB"
 
 
 
+
 <View style={styles.addressBox}>
 
 
@@ -293,7 +352,6 @@ numberOfLines={2}
 {item.address || "Location Captured"}
 
 </Text>
-
 
 
 
@@ -314,12 +372,13 @@ new Date(item.captured_at)
 
 
 
-</View>
-
-
-
 
 </View>
+
+
+
+</View>
+
 
 
 
@@ -345,7 +404,6 @@ Type : {item.type}
 
 
 
-
 </View>
 
 
@@ -353,6 +411,7 @@ Type : {item.type}
 
 
 }
+
 
 
 
@@ -385,6 +444,7 @@ export default TrackingScreen;
 const styles=StyleSheet.create({
 
 
+
 container:{
 
 flex:1,
@@ -394,6 +454,35 @@ backgroundColor:'#F5F7FB',
 padding:20
 
 },
+
+
+
+
+loader:{
+
+flex:1,
+
+justifyContent:'center',
+
+alignItems:'center',
+
+backgroundColor:'#F5F7FB'
+
+},
+
+
+
+
+loadingText:{
+
+marginTop:15,
+
+color:'#6B7280',
+
+fontWeight:'600'
+
+},
+
 
 
 
@@ -411,6 +500,7 @@ marginTop:40
 
 
 
+
 statusCard:{
 
 backgroundColor:'white',
@@ -424,6 +514,7 @@ marginTop:25,
 elevation:3
 
 },
+
 
 
 
@@ -496,6 +587,7 @@ elevation:3
 
 
 
+
 addressBox:{
 
 flex:1
@@ -531,6 +623,7 @@ marginTop:3
 
 
 
+
 coords:{
 
 marginTop:12,
@@ -538,6 +631,7 @@ marginTop:12,
 color:'#555'
 
 }
+
 
 
 });

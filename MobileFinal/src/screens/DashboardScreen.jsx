@@ -1,21 +1,26 @@
 import React,{useEffect,useState} from 'react';
 
+
 import AsyncStorage from
 '@react-native-async-storage/async-storage';
+
 
 import {
 View,
 Text,
 StyleSheet,
 ScrollView,
-TouchableOpacity
+TouchableOpacity,
+ActivityIndicator
 } from 'react-native';
 
 
-import { Ionicons } from '@expo/vector-icons';
+import {Ionicons}
+from '@expo/vector-icons';
 
 
 import api from '../api/api';
+
 
 
 
@@ -27,6 +32,10 @@ const DashboardScreen=({navigation})=>{
 const [employee,setEmployee]=useState(null);
 
 
+const [loading,setLoading]=useState(true);
+
+
+
 const [stats,setStats]=useState({
 
 locations:0,
@@ -36,6 +45,7 @@ visits:0,
 leaves:0
 
 });
+
 
 
 
@@ -57,16 +67,26 @@ loadDashboard();
 
 
 
+
 const loadDashboard=async()=>{
 
 
 try{
 
 
-const data=await AsyncStorage.getItem("employee");
+setLoading(true);
 
 
-const emp=JSON.parse(data);
+
+const data =
+await AsyncStorage.getItem(
+"employee"
+);
+
+
+
+const emp =
+JSON.parse(data);
 
 
 
@@ -76,11 +96,13 @@ setEmployee(emp);
 
 
 
-const response=await api.get(
+const response =
+await api.get(
 
 `/dashboard/${emp.id}`
 
 );
+
 
 
 
@@ -89,6 +111,7 @@ setStats(response.data);
 
 
 }
+
 
 
 catch(error){
@@ -107,7 +130,56 @@ error.message
 
 
 
+finally{
+
+
+setLoading(false);
+
+
+}
+
+
+
 };
+
+
+
+
+
+
+
+if(loading){
+
+
+return(
+
+<View style={styles.loader}>
+
+
+<ActivityIndicator
+
+size="large"
+
+color="#2563EB"
+
+/>
+
+
+
+<Text style={styles.loadingText}>
+
+Loading latest data...
+
+</Text>
+
+
+</View>
+
+
+);
+
+
+}
 
 
 
@@ -125,6 +197,7 @@ return(
 
 
 
+
 <View style={styles.header}>
 
 
@@ -136,6 +209,7 @@ return(
 Hello,
 
 </Text>
+
 
 
 
@@ -156,28 +230,21 @@ Hello,
 
 
 
+
 <TouchableOpacity
 
-onPress={()=>
-
-navigation.navigate('Profile')
-
-}
+onPress={()=>navigation.navigate('Profile')}
 
 >
 
 
 <Ionicons
 
-
 name="person-circle"
-
 
 size={42}
 
-
 color="#2563EB"
-
 
 />
 
@@ -186,8 +253,8 @@ color="#2563EB"
 
 
 
-
 </View>
+
 
 
 
@@ -204,6 +271,7 @@ color="#2563EB"
 Today's Status
 
 </Text>
+
 
 
 
@@ -232,7 +300,9 @@ Active
 
 
 
+
 </View>
+
 
 
 
@@ -244,6 +314,7 @@ Employee ID : {employee?.id}
 
 
 </Text>
+
 
 
 
@@ -259,11 +330,11 @@ Employee ID : {employee?.id}
 
 <Text style={styles.sectionTitle}>
 
-
 Overview
 
-
 </Text>
+
+
 
 
 
@@ -282,29 +353,21 @@ Overview
 
 <Ionicons
 
-
 name="location"
-
 
 size={28}
 
-
 color="#2563EB"
-
 
 />
 
 
 
-
 <Text style={styles.number}>
-
 
 {stats.locations}
 
-
 </Text>
-
 
 
 <Text>
@@ -312,8 +375,6 @@ color="#2563EB"
 Locations
 
 </Text>
-
-
 
 
 </View>
@@ -331,15 +392,11 @@ Locations
 
 <Ionicons
 
-
 name="document-text"
-
 
 size={28}
 
-
 color="#2563EB"
-
 
 />
 
@@ -348,11 +405,10 @@ color="#2563EB"
 
 <Text style={styles.number}>
 
-
 {stats.visits}
 
-
 </Text>
+
 
 
 
@@ -363,10 +419,7 @@ Visits
 </Text>
 
 
-
-
 </View>
-
 
 
 
@@ -380,15 +433,11 @@ Visits
 
 <Ionicons
 
-
 name="calendar"
-
 
 size={28}
 
-
 color="#2563EB"
-
 
 />
 
@@ -397,11 +446,10 @@ color="#2563EB"
 
 <Text style={styles.number}>
 
-
 {stats.leaves}
 
-
 </Text>
+
 
 
 
@@ -412,8 +460,6 @@ Leaves
 </Text>
 
 
-
-
 </View>
 
 
@@ -421,7 +467,6 @@ Leaves
 
 
 </View>
-
 
 
 
@@ -433,11 +478,10 @@ Leaves
 
 <Text style={styles.sectionTitle}>
 
-
 Recent Activity
 
-
 </Text>
+
 
 
 
@@ -448,34 +492,25 @@ Recent Activity
 
 <Text>
 
-
 📍 {stats.locations} location records
-
 
 </Text>
 
 
 
-
 <Text>
-
 
 📝 {stats.visits} field visits assigned
 
-
 </Text>
-
 
 
 
 <Text>
 
-
 📅 {stats.leaves} leave requests
 
-
 </Text>
-
 
 
 
@@ -489,10 +524,10 @@ Recent Activity
 </ScrollView>
 
 
-)
+);
 
 
-}
+};
 
 
 
@@ -512,7 +547,6 @@ export default DashboardScreen;
 const styles=StyleSheet.create({
 
 
-
 container:{
 
 flex:1,
@@ -520,6 +554,32 @@ flex:1,
 backgroundColor:'#F5F7FB',
 
 padding:20
+
+},
+
+
+
+loader:{
+
+flex:1,
+
+justifyContent:'center',
+
+alignItems:'center',
+
+backgroundColor:'#F5F7FB'
+
+},
+
+
+
+loadingText:{
+
+marginTop:15,
+
+color:'#6B7280',
+
+fontWeight:'600'
 
 },
 
@@ -559,6 +619,7 @@ fontSize:25,
 fontWeight:'700'
 
 },
+
 
 
 
@@ -639,6 +700,7 @@ marginTop:25,
 marginBottom:15
 
 },
+
 
 
 
