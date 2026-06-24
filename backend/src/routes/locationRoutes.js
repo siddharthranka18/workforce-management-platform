@@ -1,18 +1,24 @@
 const express=require("express");
 
 
+
 const {
 
 addLocation,
 
-getLocations
+getLocations,
+
+getAttendanceStatus
 
 
 }=require("../controllers/locationController");
 
 
 
+
 const router=express.Router();
+
+
 
 
 
@@ -29,6 +35,22 @@ addLocation
 
 
 
+
+
+router.get(
+
+"/attendance/:employeeId",
+
+getAttendanceStatus
+
+);
+
+
+
+
+
+
+
 router.get(
 
 "/:employeeId",
@@ -36,5 +58,9 @@ router.get(
 getLocations
 
 );
+
+
+
+
 
 module.exports=router;

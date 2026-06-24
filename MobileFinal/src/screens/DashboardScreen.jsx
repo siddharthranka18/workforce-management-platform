@@ -41,7 +41,9 @@ const [employee,setEmployee]=useState(null);
 
 const [loading,setLoading]=useState(true);
 
-
+const [attendanceStatus,setAttendanceStatus]
+=
+useState("NOT_CHECKED_IN");
 
 const [stats,setStats]=useState({
 
@@ -116,7 +118,20 @@ await api.get(
 
 setStats(response.data);
 
+const attendance =
+await api.get(
 
+`/locations/attendance/${emp.id}`
+
+);
+
+
+
+setAttendanceStatus(
+
+attendance.data.status
+
+);
 
 }
 
@@ -157,7 +172,8 @@ setLoading(false);
 
 
 
-const markAttendance=async()=>{
+
+const handleAttendance=async()=>{
 
 
 try{
@@ -171,11 +187,16 @@ return;
 
 
 
+
+if(attendanceStatus==="NOT_CHECKED_IN"){
+
+
+
 await saveLocation(
 
 employee.id,
 
-"ATTENDANCE"
+"CHECK_IN"
 
 );
 
@@ -183,16 +204,51 @@ employee.id,
 
 Alert.alert(
 
-"Attendance Marked",
+"Checked In",
 
-"Your attendance has been recorded successfully"
+"Your check in has been recorded"
 
 );
 
 
 
+}
+
+
+
+
+
+else if(attendanceStatus==="CHECKED_IN"){
+
+
+
+await saveLocation(
+
+employee.id,
+
+"CHECK_OUT"
+
+);
+
+
+
+Alert.alert(
+
+"Checked Out",
+
+"Your check out has been recorded"
+
+);
+
+
+
+}
+
+
+
 
 loadDashboard();
+
 
 
 
@@ -203,15 +259,13 @@ loadDashboard();
 catch(error){
 
 
-
 Alert.alert(
 
 "Error",
 
-"Unable to mark attendance"
+"Attendance update failed"
 
 );
-
 
 
 }
@@ -219,7 +273,6 @@ Alert.alert(
 
 
 };
-
 
 
 
@@ -417,18 +470,38 @@ Employee ID : {employee?.id}
 
 
 
+{
+
+
+attendanceStatus!=="COMPLETED"
+
+?
+
+
 <TouchableOpacity
 
 style={styles.attendanceButton}
 
-onPress={markAttendance}
+onPress={handleAttendance}
 
 >
 
 
 <Ionicons
 
-name="finger-print"
+name={
+
+attendanceStatus==="NOT_CHECKED_IN"
+
+?
+
+"log-in"
+
+:
+
+"log-out"
+
+}
 
 size={24}
 
@@ -440,16 +513,56 @@ color="white"
 
 <Text style={styles.attendanceText}>
 
-Mark Attendance
+
+{
+
+attendanceStatus==="NOT_CHECKED_IN"
+
+?
+
+"Check In"
+
+:
+
+"Check Out"
+
+}
+
 
 </Text>
-
 
 
 </TouchableOpacity>
 
 
+:
 
+
+<View style={styles.completedBox}>
+
+
+<Ionicons
+
+name="checkmark-done"
+
+size={24}
+
+color="green"
+
+/>
+
+
+<Text style={styles.completedText}>
+
+Attendance Completed
+
+</Text>
+
+
+</View>
+
+
+}
 
 
 
@@ -957,8 +1070,38 @@ gap:12,
 
 marginBottom:30
 
-}
+},
+completedBox:{
 
+backgroundColor:'#DCFCE7',
+
+padding:15,
+
+borderRadius:12,
+
+marginTop:20,
+
+flexDirection:'row',
+
+justifyContent:'center',
+
+alignItems:'center',
+
+gap:10
+
+},
+
+
+
+completedText:{
+
+color:'green',
+
+fontWeight:'700',
+
+fontSize:16
+
+}
 
 
 });
