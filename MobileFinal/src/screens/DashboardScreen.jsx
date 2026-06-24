@@ -40,7 +40,9 @@ const [employee,setEmployee]=useState(null);
 
 
 const [loading,setLoading]=useState(true);
-
+const [attendanceLoading,setAttendanceLoading]
+=
+useState(false);
 const [attendanceStatus,setAttendanceStatus]
 =
 useState("NOT_CHECKED_IN");
