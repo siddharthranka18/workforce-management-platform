@@ -5,13 +5,18 @@ import AsyncStorage from
 '@react-native-async-storage/async-storage';
 
 
+import {saveLocation}
+from '../services/locationService';
+
+
 import {
 View,
 Text,
 StyleSheet,
 ScrollView,
 TouchableOpacity,
-ActivityIndicator
+ActivityIndicator,
+Alert
 } from 'react-native';
 
 
@@ -20,6 +25,8 @@ from '@expo/vector-icons';
 
 
 import api from '../api/api';
+
+
 
 
 
@@ -60,6 +67,7 @@ loadDashboard();
 
 
 },[]);
+
 
 
 
@@ -113,7 +121,6 @@ setStats(response.data);
 }
 
 
-
 catch(error){
 
 
@@ -141,6 +148,80 @@ setLoading(false);
 
 
 };
+
+
+
+
+
+
+
+
+
+const markAttendance=async()=>{
+
+
+try{
+
+
+if(!employee){
+
+return;
+
+}
+
+
+
+await saveLocation(
+
+employee.id,
+
+"ATTENDANCE"
+
+);
+
+
+
+Alert.alert(
+
+"Attendance Marked",
+
+"Your attendance has been recorded successfully"
+
+);
+
+
+
+
+loadDashboard();
+
+
+
+}
+
+
+
+catch(error){
+
+
+
+Alert.alert(
+
+"Error",
+
+"Unable to mark attendance"
+
+);
+
+
+
+}
+
+
+
+};
+
+
+
 
 
 
@@ -189,9 +270,11 @@ Loading latest data...
 
 
 
+
 return(
 
 <ScrollView style={styles.container}>
+
 
 
 
@@ -231,6 +314,7 @@ Hello,
 
 
 
+
 <TouchableOpacity
 
 onPress={()=>navigation.navigate('Profile')}
@@ -263,6 +347,8 @@ color="#2563EB"
 
 
 
+
+
 <View style={styles.statusCard}>
 
 
@@ -271,6 +357,7 @@ color="#2563EB"
 Today's Status
 
 </Text>
+
 
 
 
@@ -300,8 +387,8 @@ Active
 
 
 
-
 </View>
+
 
 
 
@@ -328,6 +415,47 @@ Employee ID : {employee?.id}
 
 
 
+
+
+<TouchableOpacity
+
+style={styles.attendanceButton}
+
+onPress={markAttendance}
+
+>
+
+
+<Ionicons
+
+name="finger-print"
+
+size={24}
+
+color="white"
+
+/>
+
+
+
+<Text style={styles.attendanceText}>
+
+Mark Attendance
+
+</Text>
+
+
+
+</TouchableOpacity>
+
+
+
+
+
+
+
+
+
 <Text style={styles.sectionTitle}>
 
 Overview
@@ -341,7 +469,10 @@ Overview
 
 
 
+
+
 <View style={styles.statsContainer}>
+
 
 
 
@@ -363,6 +494,7 @@ color="#2563EB"
 
 
 
+
 <Text style={styles.number}>
 
 {stats.locations}
@@ -370,11 +502,13 @@ color="#2563EB"
 </Text>
 
 
+
 <Text>
 
 Locations
 
 </Text>
+
 
 
 </View>
@@ -402,7 +536,6 @@ color="#2563EB"
 
 
 
-
 <Text style={styles.number}>
 
 {stats.visits}
@@ -419,7 +552,10 @@ Visits
 </Text>
 
 
+
 </View>
+
+
 
 
 
@@ -443,7 +579,6 @@ color="#2563EB"
 
 
 
-
 <Text style={styles.number}>
 
 {stats.leaves}
@@ -458,6 +593,7 @@ color="#2563EB"
 Leaves
 
 </Text>
+
 
 
 </View>
@@ -535,7 +671,10 @@ Recent Activity
 
 
 
+
+
 export default DashboardScreen;
+
 
 
 
@@ -547,6 +686,7 @@ export default DashboardScreen;
 const styles=StyleSheet.create({
 
 
+
 container:{
 
 flex:1,
@@ -556,6 +696,8 @@ backgroundColor:'#F5F7FB',
 padding:20
 
 },
+
+
 
 
 
@@ -573,6 +715,7 @@ backgroundColor:'#F5F7FB'
 
 
 
+
 loadingText:{
 
 marginTop:15,
@@ -582,6 +725,8 @@ color:'#6B7280',
 fontWeight:'600'
 
 },
+
+
 
 
 
@@ -624,6 +769,8 @@ fontWeight:'700'
 
 
 
+
+
 statusCard:{
 
 backgroundColor:'white',
@@ -654,6 +801,8 @@ marginBottom:15
 
 
 
+
+
 row:{
 
 flexDirection:'row',
@@ -663,6 +812,7 @@ alignItems:'center',
 gap:10
 
 },
+
 
 
 
@@ -689,6 +839,47 @@ color:'gray'
 
 
 
+
+
+attendanceButton:{
+
+backgroundColor:'#2563EB',
+
+padding:15,
+
+borderRadius:12,
+
+marginTop:20,
+
+flexDirection:'row',
+
+justifyContent:'center',
+
+alignItems:'center',
+
+gap:10
+
+},
+
+
+
+
+
+attendanceText:{
+
+color:'white',
+
+fontSize:16,
+
+fontWeight:'700'
+
+},
+
+
+
+
+
+
 sectionTitle:{
 
 fontSize:20,
@@ -705,6 +896,7 @@ marginBottom:15
 
 
 
+
 statsContainer:{
 
 flexDirection:'row',
@@ -712,6 +904,8 @@ flexDirection:'row',
 justifyContent:'space-between'
 
 },
+
+
 
 
 
@@ -735,6 +929,7 @@ elevation:3
 
 
 
+
 number:{
 
 fontSize:22,
@@ -744,6 +939,8 @@ fontWeight:'700',
 marginVertical:5
 
 },
+
+
 
 
 
